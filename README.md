@@ -1,1 +1,1 @@
-# Sistema clinica
+# Sistema clínica
