@@ -1,4 +1,4 @@
-package med.voll.medico;
+package med.voll.domain.medico;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
