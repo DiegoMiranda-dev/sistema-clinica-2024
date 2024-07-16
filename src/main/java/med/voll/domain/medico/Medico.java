@@ -1,8 +1,8 @@
-package med.voll.medico;
+package med.voll.domain.medico;
 
 import jakarta.persistence.*;
 import lombok.*;
-import med.voll.direccion.Direccion;
+import med.voll.domain.direccion.Direccion;
 
 @Table(name = "medicos")
 @Entity(name = "Medico")
