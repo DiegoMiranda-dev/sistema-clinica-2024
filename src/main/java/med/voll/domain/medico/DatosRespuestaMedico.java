@@ -1,7 +1,6 @@
-package med.voll.medico;
+package med.voll.domain.medico;
 
-import med.voll.direccion.DatosDireccion;
-import med.voll.direccion.Direccion;
+import med.voll.domain.direccion.DatosDireccion;
 
 public record DatosRespuestaMedico(
         Long id,
@@ -9,7 +8,8 @@ public record DatosRespuestaMedico(
         String email,
         String telefono,
         String documento,
+        Especialidad especialidad,
         DatosDireccion direccion
-) {
 
-}
+) {}
+
