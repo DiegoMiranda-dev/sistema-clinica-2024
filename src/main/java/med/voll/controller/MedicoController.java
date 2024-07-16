@@ -2,9 +2,8 @@ package med.voll.controller;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import med.voll.direccion.DatosDireccion;
-import med.voll.medico.*;
-import org.apache.coyote.Response;
+import med.voll.domain.direccion.DatosDireccion;
+import med.voll.domain.medico.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping("/medicos")
@@ -25,10 +23,10 @@ public class MedicoController {
 
     @PostMapping // POST /medico
     public ResponseEntity<DatosRespuestaMedico> medico(@RequestBody @Valid DatosRegistroMedico datosRegistroMedico, UriComponentsBuilder uriBuilder) {
-         Medico medico = medicosRepository.save(new Medico(datosRegistroMedico));
+        Medico medico = medicosRepository.save(new Medico(datosRegistroMedico));
         DatosRespuestaMedico datosRespuestaMedico = new DatosRespuestaMedico(medico.getId(),
                 medico.getNombre(), medico.getEmail(), medico.getTelefono(),
-                medico.getEspecialidad().toString(), new DatosDireccion(medico.getDireccion().getCalle(),
+                medico.getDocumento(), medico.getEspecialidad(), new DatosDireccion(medico.getDireccion().getCalle(),
                 medico.getDireccion().getDistrito(), medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
                 medico.getDireccion().getComplemento()));
         URI url = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
@@ -36,7 +34,7 @@ public class MedicoController {
     }
 
     @GetMapping // GET /medico
-    public ResponseEntity<Page<DatosListadoMedico>> listadoMedicos(@PageableDefault(size = 8, sort = "nombre" ) Pageable paginacion) {
+    public ResponseEntity<Page<DatosListadoMedico>> listadoMedicos(@PageableDefault(size = 8, sort = "nombre") Pageable paginacion) {
         //return medicosRepository.findAll(paginacion).map(DatosListadoMedico::new);
         return ResponseEntity.ok(medicosRepository.findByActivoTrue(paginacion).map(DatosListadoMedico::new));
 
@@ -50,7 +48,7 @@ public class MedicoController {
         medico.actualizarDatos(datosActualizarMedico);
         return ResponseEntity.ok(new DatosRespuestaMedico(medico.getId(),
                 medico.getNombre(), medico.getEmail(), medico.getTelefono(),
-                medico.getEspecialidad().toString(), new DatosDireccion(medico.getDireccion().getCalle(),
+                medico.getDocumento(), medico.getEspecialidad(), new DatosDireccion(medico.getDireccion().getCalle(),
                 medico.getDireccion().getDistrito(), medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
                 medico.getDireccion().getComplemento())));
     }
@@ -68,14 +66,23 @@ public class MedicoController {
     @GetMapping("/{id}")
     public ResponseEntity retornaDatosMedico(@PathVariable Long id) {
         Medico medico = medicosRepository.getReferenceById(id);
-        var datosMedico = new DatosRespuestaMedico(medico.getId(),
-                medico.getNombre(), medico.getEmail(), medico.getTelefono(),
-                medico.getEspecialidad().toString(), new DatosDireccion(medico.getDireccion().getCalle(),
-                medico.getDireccion().getDistrito(), medico.getDireccion().getCiudad(), medico.getDireccion().getNumero(),
-                medico.getDireccion().getComplemento()));
+        var datosMedico = new DatosRespuestaMedico(
+                medico.getId(),
+                medico.getNombre(),
+                medico.getEmail(),
+                medico.getTelefono(),
+                medico.getDocumento(),
+                medico.getEspecialidad(),
+            new DatosDireccion(
+                medico.getDireccion().getCalle(),
+                medico.getDireccion().getDistrito(),
+                medico.getDireccion().getCiudad(),
+                medico.getDireccion().getNumero(),
+                medico.getDireccion().getComplemento())
+
+        );
         return ResponseEntity.ok(datosMedico);
     }
-
 
 
     //BORRAR DE LA BASE DE DATOS  <-- NO TOCAR
