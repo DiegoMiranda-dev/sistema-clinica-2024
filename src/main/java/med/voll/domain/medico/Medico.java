@@ -22,6 +22,7 @@ public class Medico {
     private Especialidad especialidad;
     @Embedded
     private Direccion direccion;
+    
     private boolean activo;
 
     public Medico(DatosRegistroMedico datosRegistroMedico) {
